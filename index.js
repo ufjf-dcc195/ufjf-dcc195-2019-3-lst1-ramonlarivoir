@@ -7,5 +7,6 @@ rotas["/"] = controllers.index;
 rotas["/index.html"] = controllers.index;
 rotas["/sobre.html"] = controllers.sobre;
 rotas["/aleatorio.html"] = controllers.aleatorio;
+rotas["/primos.html"] = controllers.primos;
 
 server.start(router.route, rotas);
