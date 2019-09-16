@@ -9,8 +9,15 @@ exports.index = function index(req, res) {
         <li><a href='sobre.html'>Sobre</a></li>
         <li><a href='aleatorio.html'>Aleatório</a></li>
         <li><a href='primos.html?n1=&n2='>Primos</a></li>
+        <li><a href='equacao.html'>Equação</a></li>
     </ul>
     `);
+    res.end();
+}
+
+exports.notfound = function (req, res) {
+    res.writeHead(404, {"Content-Type": "text/html"});
+    res.write(`<h1>Página não encontrada: ${req.url}</h1>`);
     res.end();
 }
 
@@ -82,4 +89,55 @@ exports.primos = function primos(req, res) {
     calculaPrimo(res, n1, n2);
     res.write("<br/><a href='index.html'>Voltar</a>");
     res.end();
+}
+
+exports.equacao = function equacao(req, res) {
+    if(req.method == 'GET') {
+        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+        res.write(`
+        <form method='post'>
+            <p>Digite os números de acordo com a expressão AX²+BX+C</p>
+            <label>Digite o valor de A:</label>
+            <input type='number' placehold='senha' name='a'>
+            <label>Digite o valor de B:</label>
+            <input type='number' placehold='senha' name='b'>
+            <label>Digite o valor de C:</label>
+            <input type='number' placehold='senha' name='c'>
+            <button type='submit'>Enviar</button>
+        </form>
+        `);
+        res.end();
+    }
+    else if(req.method == 'POST') {
+        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+        let body = '';
+        req.on('data', (data) => {
+            body += data;
+        });
+        req.on('end', () => {
+            let query = qs.parse(body);
+            let a = query.a;
+            let b = query.b;
+            let c = query.c;
+            
+            if(!(a && b && c )){
+                res.write("<p>Insira os 3 valores!</p>");
+                res.write("<br/><a href='equacao.html'>Voltar</a>");
+                res.end();
+            }else {
+                let x1 = (-1 * b + Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a);
+                let x2 = (-1 * b - Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a);
+                
+                if(isNaN(x1) || isNaN(x2)){
+                    res.write("<p>Não foi possível encontrar as raízes para estes valores.");
+                    res.write("<br/><a href='equacao.html'>Voltar</a>");
+                    res.end();
+                } else {
+                    res.write("<p>" + x1 + "</p>");  
+                    res.write("<p>" + x2 + "</p>");  
+                    res.end();
+                }   
+            }                       
+        });
+    }
 }
