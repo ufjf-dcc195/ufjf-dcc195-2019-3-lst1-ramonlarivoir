@@ -105,6 +105,7 @@ exports.equacao = function equacao(req, res) {
             <input type='number' placehold='senha' name='c'>
             <button type='submit'>Enviar</button>
         </form>
+        <br/><a href='index.html'>Voltar</a>
         `);
         res.end();
     }
